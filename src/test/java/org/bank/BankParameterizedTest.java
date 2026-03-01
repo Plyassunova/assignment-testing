@@ -7,7 +7,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BankParameterizedTest {
-
     @ParameterizedTest
     @CsvSource({
             "100, 50, 150",

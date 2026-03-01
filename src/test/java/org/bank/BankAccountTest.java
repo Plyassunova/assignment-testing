@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BankAccountTest {
-
     @Test
     void validInitialBalanceInitializesCorrectly() {
         BankAccount account = new BankAccount("1", "Alice", 100.0);
