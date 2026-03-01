@@ -24,7 +24,7 @@ public class Bank {
         if (from == null || to == null) {
             throw new IllegalArgumentException("Accounts cannot be null");
         }
-        from.withdraw(amount);
-        to.deposit(amount);
+        to.withdraw(amount);
+        from.deposit(amount);
     }
 }

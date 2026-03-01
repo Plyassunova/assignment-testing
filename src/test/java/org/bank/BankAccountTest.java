@@ -1,45 +1,72 @@
 package org.bank;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BankAccountTest {
 
     @Test
-    void totalAssetsCalculatedCorrectly() {
-        Bank bank = new Bank();
-        BankAccount a1 = new BankAccount("1", "Alena", 100);
-        BankAccount a2 = new BankAccount("2", "Bob", 200);
-
-        bank.addAccount(a1);
-        bank.addAccount(a2);
-
-        assertEquals(300, bank.getTotalAssets());
+    void validInitialBalanceInitializesCorrectly() {
+        BankAccount account = new BankAccount("1", "Alice", 100.0);
+        assertEquals(100.0, account.getBalance(), 1e-9);
     }
 
     @Test
-    void transferSuccess() {
-        BankAccount from = new BankAccount("1", "A", 500);
-        BankAccount to = new BankAccount("2", "B", 100);
-
-        Bank bank = new Bank();
-        bank.transfer(from, to, 200);
-
-        assertEquals(300, from.getBalance());
-        assertEquals(300, to.getBalance());
-    }
-
-    @Test
-    void transferInsufficientBalance() {
-        BankAccount from = new BankAccount("1", "A", 100);
-        BankAccount to = new BankAccount("2", "B", 100);
-
-        Bank bank = new Bank();
-
+    void negativeInitialBalanceThrowsException() {
         assertThrows(IllegalArgumentException.class,
-                () -> bank.transfer(from, to, 200));
+                () -> new BankAccount("1", "Alice", -0.01));
+    }
 
-        assertEquals(100, from.getBalance());
-        assertEquals(100, to.getBalance());
+    @Test
+    void normalDepositIncreasesBalance() {
+        BankAccount account = new BankAccount("1", "Alice", 100.0);
+        account.deposit(50.0);
+        assertEquals(150.0, account.getBalance(), 1e-9);
+    }
+
+    @Test
+    void zeroDepositThrowsException() {
+        BankAccount account = new BankAccount("1", "Alice", 100.0);
+        assertThrows(IllegalArgumentException.class, () -> account.deposit(0.0));
+        assertEquals(100.0, account.getBalance(), 1e-9);
+    }
+
+    @Test
+    void negativeDepositThrowsException() {
+        BankAccount account = new BankAccount("1", "Alice", 100.0);
+        assertThrows(IllegalArgumentException.class, () -> account.deposit(-1.0));
+        assertEquals(100.0, account.getBalance(), 1e-9);
+    }
+
+    @Test
+    void normalWithdrawalReducesBalance() {
+        BankAccount account = new BankAccount("1", "Alice", 100.0);
+        account.withdraw(30.0);
+        assertEquals(70.0, account.getBalance(), 1e-9);
+    }
+
+    @Test
+    void withdrawalEqualToBalanceSucceeds() {
+        BankAccount account = new BankAccount("1", "Alice", 100.0);
+        account.withdraw(100.0);
+        assertEquals(0.0, account.getBalance(), 1e-9);
+    }
+
+    @Test
+    void withdrawalExceedingBalanceThrowsException() {
+        BankAccount account = new BankAccount("1", "Alice", 100.0);
+        assertThrows(IllegalArgumentException.class, () -> account.withdraw(100.01));
+        assertEquals(100.0, account.getBalance(), 1e-9);
+    }
+
+    @Test
+    void zeroOrNegativeWithdrawalThrowsException() {
+        BankAccount account = new BankAccount("1", "Alice", 100.0);
+
+        assertThrows(IllegalArgumentException.class, () -> account.withdraw(0.0));
+        assertThrows(IllegalArgumentException.class, () -> account.withdraw(-5.0));
+
+        assertEquals(100.0, account.getBalance(), 1e-9);
     }
 }
