@@ -11,7 +11,6 @@ class BankTest {
         bank.addAccount(new BankAccount("1", "Alena", 100));
         bank.addAccount(new BankAccount("2", "Bob", 200));
 
-        // We can't access the internal list directly, so we verify via observable behavior.
         assertEquals(300, bank.getTotalAssets(), 1e-9);
     }
 
